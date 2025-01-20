@@ -15,6 +15,7 @@ body {
   display: flex;
   justify-content: space-between;
   padding: 15px;
+  width: 100vw;
   background-color: #2e93ff;
   color: white;
   align-items: center;
