@@ -212,28 +212,6 @@ const Dashboard = () => {
       return;
     }
   
-    
-    const isConflict = events.some((event) => {
-      const existingStart = new Date(event.start.dateTime);
-      const existingEnd = new Date(event.end.dateTime);
-  
-      
-      const isExactMatch =
-        existingStart.getTime() === startDateTime.getTime() &&
-        existingEnd.getTime() === endDateTime.getTime();
-  
-      
-      const isOverlap =
-        (startDateTime >= existingStart && startDateTime < existingEnd) ||
-        (endDateTime > existingStart && endDateTime <= existingEnd);
-  
-      return isExactMatch || isOverlap;
-    });
-  
-    if (isConflict) {
-      alert("An event already exists for the selected time or overlaps with another event.");
-      return;
-    }
   
     const token = localStorage.getItem("authToken");
   

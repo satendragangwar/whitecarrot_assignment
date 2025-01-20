@@ -1,36 +1,7 @@
 const { google } = require("googleapis");
 const User = require("../models/User");
 
-const validateEventTimes = async (startDateTime, endDateTime, oAuth2Client) => {
-  const calendar = google.calendar({ version: "v3", auth: oAuth2Client });
-  const response = await calendar.events.list({
-    calendarId: "primary",
-    timeMin: new Date().toISOString(), // Only future events
-    timeMax: new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString(), // Up to next year
-  });
 
-  const events = response.data.items;
-
-  
-  const isConflict = events.some((event) => {
-    const existingStart = new Date(event.start.dateTime);
-    const existingEnd = new Date(event.end.dateTime);
-
-   
-    const isExactMatch =
-      existingStart.getTime() === startDateTime.getTime() &&
-      existingEnd.getTime() === endDateTime.getTime();
-
-    
-    const isOverlap =
-      (startDateTime >= existingStart && startDateTime < existingEnd) ||
-      (endDateTime > existingStart && endDateTime <= existingEnd);
-
-    return isExactMatch || isOverlap;
-  });
-
-  return isConflict;
-};
 
 
 const createEvent = async (req, res) => {
@@ -64,11 +35,6 @@ const createEvent = async (req, res) => {
       return res.status(400).json({ message: "Start time cannot be in the past." });
     }
 
-    
-    const isConflict = await validateEventTimes(startDateTime, endDateTime, oAuth2Client);
-    if (isConflict) {
-      return res.status(400).json({ message: "Event conflicts with an existing event." });
-    }
 
     const event = {
       summary,
@@ -187,29 +153,7 @@ const updateEvent = async (req, res) => {
 
     const events = response.data.items;
 
-    const isConflict = events.some((event) => {
-      
-      if (event.id === eventId) return false;
-
-      const existingStart = new Date(event.start.dateTime);
-      const existingEnd = new Date(event.end.dateTime);
-
-      
-      const isExactMatch =
-        existingStart.getTime() === startDateTime.getTime() &&
-        existingEnd.getTime() === endDateTime.getTime();
-
-      
-      const isOverlap =
-        (startDateTime >= existingStart && startDateTime < existingEnd) ||
-        (endDateTime > existingStart && endDateTime <= existingEnd);
-
-      return isExactMatch || isOverlap;
-    });
-
-    if (isConflict) {
-      return res.status(400).json({ message: "Event conflicts with an existing event." });
-    }
+  
 
     const event = {
       summary,
