@@ -1,7 +1,7 @@
 const { google } = require("googleapis");
 const User = require("../models/User");
 
-const validateEventTimes = async (user, startDateTime, endDateTime) => {
+const validateEventTimes = async (startDateTime, endDateTime, oAuth2Client) => {
   const calendar = google.calendar({ version: "v3", auth: oAuth2Client });
   const response = await calendar.events.list({
     calendarId: "primary",
@@ -50,7 +50,7 @@ const createEvent = async (req, res) => {
       process.env.GOOGLE_CLIENT_SECRET
     );
     oAuth2Client.setCredentials({ access_token: token });
-
+  
     const { summary, startDate, startTime, endDate, endTime, description, location } = req.body;
     const startDateTime = new Date(`${startDate}T${startTime}:00`);
     const endDateTime = new Date(`${endDate}T${endTime}:00`);
@@ -65,7 +65,7 @@ const createEvent = async (req, res) => {
     }
 
     
-    const isConflict = await validateEventTimes(user, startDateTime, endDateTime);
+    const isConflict = await validateEventTimes(startDateTime, endDateTime, oAuth2Client);
     if (isConflict) {
       return res.status(400).json({ message: "Event conflicts with an existing event." });
     }
@@ -78,6 +78,7 @@ const createEvent = async (req, res) => {
       end: { dateTime: endDateTime, timeZone: "Asia/Kolkata" },
     };
 
+    const calendar = google.calendar({ version: "v3", auth: oAuth2Client });
     const response = await calendar.events.insert({
       calendarId: "primary",
       resource: event,
