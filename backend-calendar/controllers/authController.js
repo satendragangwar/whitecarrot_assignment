@@ -4,7 +4,7 @@ const User = require("../models/User");
 const client = new OAuth2Client(
   process.env.GOOGLE_CLIENT_ID,
   process.env.GOOGLE_CLIENT_SECRET,
-  "http://localhost:3000/api/auth/callback"
+  `${process.env.BACKEND_URL}/api/auth/callback`
 );
 
 const login = (req, res) => {
@@ -48,7 +48,7 @@ const googleAuth = async (req, res) => {
     await user.save();
 
     res.redirect(
-      `http://localhost:5173/dashboard?token=${tokens.access_token}`
+      `${process.env.FRONTEND_URL}/dashboard?token=${tokens.access_token}`
       // `http://localhost:5173/dashboard?token=${tokens.access_token}`
     );
   } catch (error) {
