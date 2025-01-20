@@ -11,8 +11,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "https://google-calendar-rks.netlify.app",
-      "https://google-calendar-nine-blond.vercel.app",
+      "https://whitecarrot-assignment.vercel.app",
     ],
     credentials: true,
   })
