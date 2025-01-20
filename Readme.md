@@ -55,13 +55,13 @@ This project demonstrates the integration of Google Calendar with a web applicat
 
 ## **Environment variables**
 
-``
-MONGO_URI=<Your MongoDB Connection String>
+```
+MONGO_URI=<Your MongoDB Connection String> 
 PORT=3000
 GOOGLE_CLIENT_ID=<Your Google OAuth 2.0 Client ID>
 GOOGLE_CLIENT_SECRET=<Your Google OAuth 2.0 Client Secret>
 BACKEND_URL=http://localhost:3000
 FRONTEND_URL=http://localhost:5173
-``
+```
 
 
